@@ -54,3 +54,10 @@ app.post("/districts", async (request, response) => {
   );
   response.send("District Added Successfully");
 });
+
+app.get("/districts/:districtId/", async (request, response) => {
+  const { districtId } = request.params;
+  const getDistrictQuery = `select * from district where district_id=?;`;
+  const district = await db.get(getDistrictQuery, districtId);
+  response.send(district);
+});
