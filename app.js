@@ -68,3 +68,33 @@ app.delete("/districts/:districtId/", async (request, response) => {
   await db.run(deleteDistrictQuery, districtId);
   response.send("District Removed");
 });
+
+app.put("/districts/:districtId/", async (request, response) => {
+  const { districtId } = request.params;
+  const { districtName, stateId, cases, cured, active, deaths } = request.body;
+
+  const updateDistrictQuery = `
+    UPDATE district
+    SET 
+      district_name = ?, 
+      state_id = ?, 
+      cases = ?, 
+      cured = ?, 
+      active = ?, 
+      deaths = ?
+    WHERE 
+      district_id = ?;
+  `;
+
+  await db.run(updateDistrictQuery, [
+    districtName,
+    stateId,
+    cases,
+    cured,
+    active,
+    deaths,
+    districtId,
+  ]);
+
+  response.send("District Details Updated");
+});
