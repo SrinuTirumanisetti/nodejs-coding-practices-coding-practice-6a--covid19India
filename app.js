@@ -98,3 +98,22 @@ app.put("/districts/:districtId/", async (request, response) => {
 
   response.send("District Details Updated");
 });
+
+app.get("/states/:stateId/stats/", async (request, response) => {
+  const { stateId } = request.params;
+
+  const getStatsQuery = `
+    SELECT 
+      SUM(cases) AS totalCases,
+      SUM(cured) AS totalCured,
+      SUM(active) AS totalActive,
+      SUM(deaths) AS totalDeaths
+    FROM 
+      district
+    WHERE 
+      state_id = ?;
+  `;
+
+  const stats = await db.get(getStatsQuery, [stateId]);
+  response.send(stats);
+});
