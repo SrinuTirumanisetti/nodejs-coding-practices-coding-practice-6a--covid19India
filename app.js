@@ -61,3 +61,10 @@ app.get("/districts/:districtId/", async (request, response) => {
   const district = await db.get(getDistrictQuery, districtId);
   response.send(district);
 });
+
+app.delete("/districts/:districtId/", async (request, response) => {
+  const { districtId } = request.params;
+  const deleteDistrictQuery = `delete from district where district_id=?;`;
+  await db.run(deleteDistrictQuery, districtId);
+  response.send("District Removed");
+});
