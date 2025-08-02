@@ -31,3 +31,26 @@ app.get("/states", async (request, response) => {
   const dbStates = await db.all(getStatesQuery);
   response.send(dbStates);
 });
+
+app.get("/states/:stateId/", async (request, response) => {
+  const { stateId } = request.params;
+  const getStateDetailQuery = `select * from state where state_id = ?;`;
+  const dbStateDetail = await db.get(getStateDetailQuery, [stateId]);
+  response.send(dbStateDetail);
+});
+
+app.post("/districts", async (request, response) => {
+  const { districtName, stateId, cases, cured, active, deaths } = request.body;
+  const addDistrictQuery = `INSERT INTO district(district_name, state_id, cases, cured, active, deaths)
+                            values(?,?,?,?,?,?);`;
+  const district = await db.run(
+    addDistrictQuery,
+    districtName,
+    stateId,
+    cases,
+    cured,
+    active,
+    deaths
+  );
+  response.send("District Added Successfully");
+});
